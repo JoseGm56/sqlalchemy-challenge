@@ -104,14 +104,14 @@ def date_summary(start):
     session = Session(engine)
 
     start_date = start
-    summary = session.query(Measurements.date, func.min(Measurements.tobs), func.avg(Measurements.tobs), func.max(Measurements.tobs)).filter(Measurements.date >= start_date).group_by(Measurements.date).all()
+    summary = session.query(func.min(Measurements.tobs), func.avg(Measurements.tobs), func.max(Measurements.tobs)).filter(Measurements.date >= start_date).all()
     
     session.close() 
 
     summary_list = []
 
     for i in range(len(summary)):
-        summary_list.append(summary[i][1:])
+        summary_list.append(summary[i][0:])
 
     return jsonify(summary_list)
 
@@ -128,12 +128,10 @@ def time_frame_summary(start,end):
     session.close() 
 
 
-    summary_list = []
+    summary_list = list(np.ravel(summary))
 
-    #for i in range(len(summary)):
-    #    summary_list.append(summary[i])
 
-    return jsonify(summary)
+    return jsonify(summary_list)
 
 
 
