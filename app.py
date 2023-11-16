@@ -121,16 +121,19 @@ def date_summary(start):
 def time_frame_summary(start,end):
     session = Session(engine)
 
-    summary = session.query(Measurements.date, func.min(Measurements.tobs), func.avg(Measurements.tobs), func.max(Measurements.tobs)).filter(Measurements.date >= start).filter(Measurements.date <= end).group_by(Measurements.date).all()
+    summary = session.query(func.min(Measurements.tobs), func.avg(Measurements.tobs), func.max(Measurements.tobs)).\
+        filter(Measurements.date >= start).\
+        filter(Measurements.date <= end).all()
 
     session.close() 
 
+
     summary_list = []
 
-    for i in range(len(summary)):
-        summary_list.append(summary[i][1:]) 
+    #for i in range(len(summary)):
+    #    summary_list.append(summary[i])
 
-    return jsonify(summary_list)
+    return jsonify(summary)
 
 
 
